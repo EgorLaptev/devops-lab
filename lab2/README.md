@@ -3,6 +3,7 @@
 ## Dockerfile
 
 ### 1. Bad practice
+
 ```dockerfile
 FROM node:latest
 
@@ -10,7 +11,7 @@ USER root
 
 WORKDIR /app
 
-COPY . .
+COPY basic .
 
 RUN npm i
 

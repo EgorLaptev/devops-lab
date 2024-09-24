@@ -8,7 +8,7 @@ COPY package*.json ./
 
 RUN npm install && npm cache clean --force
 
-COPY . .
+COPY basic .
 
 USER appuser
 

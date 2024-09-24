@@ -1,7 +1,5 @@
-# Облачные технологии и услуги
+# Devops Labs 
 
-## Лабораторные работы
-
-### 1.  [nginx](/lab1)
-### 2.  [Dockerfile](/lab2)
-### 3.  [CI/CD](/lab3)
+- [Nginx](/lab1)
+- [Docker](/lab2)
+- [CI/CD](/lab3)
