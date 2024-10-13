@@ -1,0 +1,29 @@
+name: Bad Practice CI/CD Pipeline
+
+on: push
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copying the code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        run: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy
+        env:
+          API_KEY: "FJE4G-F8452-LIA0F-B7S88-JE09P"
