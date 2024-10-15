@@ -1,12 +1,49 @@
-version: '3';
+version: '3'
 
 services:
-  express:
+  node-app:
     build:
-      context: express
+      context: server
       dockerfile: Dockerfile
-    container_name: express
+    container_name: node-app
+    ports:
+      - '3000:3000'
+    environment:
+      MYSQL_HOST: mysql-db
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - node-network
 
-  mysql:
-    build:
-      
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - db-network
+
+volumes:
+  db-data:
+
+networks:
+  db-network:
+    driver: bridge
+  node-network:
+    driver: bridge
