@@ -3,8 +3,8 @@ name: Best Practice CI/CD Pipeline
 on:
   push:
     branches:
-      - main
       - develop
+      - master
 
 jobs:
   unit_tests:
@@ -35,6 +35,6 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Deploy to Production
-        run: ssh user@server "deploy-script.sh"
+        run: echo "Deploying"
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}

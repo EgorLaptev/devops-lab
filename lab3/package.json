@@ -1,0 +1,11 @@
+{
+  "name": "lab3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "Хорошее и плохое написание CI/CD файлов на примере github actions"
+}
