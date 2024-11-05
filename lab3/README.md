@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Node.js
-        run: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+        run: curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 
       - name: Install dependencies
         run: npm install
@@ -25,9 +25,14 @@ jobs:
         run: npm test
 
       - name: Deploy
+        run: echo "Deploying.."
         env:
           API_KEY: "FJE4G-F8452-LIA0F-B7S88-JE09P"
 ```
+
+### Пример запуска
+![bad workflow](report/bad-workflow.png)
+
 ### Были допущены следующие ошибки:
 1. **Запуск на любой пуш (неограниченные триггеры)** — пайплайн запускается на каждое изменение, что увеличивает количество ненужных запусков, даже для незначительных изменений.
 2. **Использование curl для установки Node.js** — это не лучший способ управления версиями, поскольку он не фиксирует конкретную версию Node.js, что может привести к неожиданным проблемам при обновлениях.
@@ -37,12 +42,13 @@ jobs:
 
 ## Best practice
 ```yaml
-name: Best Practice
+name: Best Practice CI/CD Pipeline
+
 on:
   push:
     branches:
-      - main
       - develop
+      - master
 
 jobs:
   unit_tests:
@@ -66,34 +72,24 @@ jobs:
       - name: Run Unit Tests
         run: npm run test
 
-  integration_tests:
-    runs-on: ubuntu-latest
-    needs: unit_tests
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Run Integration Tests
-        run: npm run integration-tests
-
   deploy:
     runs-on: ubuntu-latest
-    needs: [unit_tests, integration_tests]
+    needs: [unit_tests]
     steps:
       - uses: actions/checkout@v3
 
       - name: Deploy to Production
+        run: echo "Deploying"
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 ```
+
+### Пример запуска
+![best workflow 1](report/best-workflow-1.png)
+![best workflow 2](report/best-workflow-2.png)
+![best workflow 3](report/best-workflow-3.png)
+
+
 ### Было исправлено:
 1. **Ограниченные триггеры** — пайплайн запускается только на ветках `main` и `develop`, что сокращает ненужные запуски.
 2. **Кэширование зависимостей** — используется кэш для `node_modules`, что ускоряет сборку и снижает нагрузку на систему.
